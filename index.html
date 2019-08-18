@@ -9,7 +9,7 @@
         // ЗАДАНИЯ ДЛЯ РАЗМИНКИ!!!!!!)))
 
 
-        //1) Есть три обьекта организовать цепочку таким образом чтобы обьект obj1 был родилем obj2, obj2 родителем obj3
+        //1+) Есть три обьекта организовать цепочку таким образом чтобы обьект obj1 был родилем obj2, obj2 родителем obj3
         const obj1 = {
             name: 'Sergei',
             lastName: 'Shakhov'
@@ -24,6 +24,13 @@
             name: 'Misha',
             lastName: 'Ivanov'
         };
+        
+        
+        obj2._proto_ = obj1;
+        obj3._proto_ = obj2;
+
+        console.log('obj1 is Parent of obj2: ', obj2._proto_);
+        console.log('obj2 is Parent of obj3: ', obj3._proto_);
 
 
 
@@ -56,6 +63,9 @@
             orderList
         }
 
+        
+        
+        
         // 3) Ну и последнее как всегда! теперь пишем свой splice
         function splice(array) {
             // ваш код
