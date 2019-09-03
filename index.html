@@ -146,10 +146,57 @@
         
         
         
-        // 3) Ну и последнее как всегда! теперь пишем свой splice
-        function splice(array) {
-            // ваш код
+         // 3) Ну и последнее как всегда! теперь пишем свой splice
+        // function splice(array) {
+        //     // ваш код
+        // }
+
+
+
+        function splice(array, start, deleteCount, ...item) {
+            if (start > array.length) {
+                start = array.length;
+            } else if (start < 0 && Math.abs(start) > array.length) {
+                start = 0;
+            } else if (start < 0 && Math.abs(start) < array.length) {
+                start = array.length - Math.abs(start);
+            } else {
+                start = start;
+            };
+
+
+            if (deleteCount > (array.length - start)) {
+                deleteCount = array.length - start;
+            } else if (deleteCount < 0) {
+                deleteCount = 0;
+            } else {
+                deleteCount = deleteCount;
+            }
+
+
+            let removedItems = [];
+            let tempArr = [...array];    
+            array.length = 0;
+
+            for (let i = 0, j = deleteCount; i < tempArr.length; i++) {
+                if (i === start) {
+                    array.push(...item);
+                }
+                if (j && i >= start) {
+                    j--;
+                    removedItems.push(tempArr[i]);
+                    continue;
+                }
+                array.push(tempArr[i]);
+            };
+            return removedItems;
         }
+        const arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'J'];
+        console.log(`Removed: ${splice(arr, 3, 1, 'AAAAA')}`);
+        console.log(`Removed: ${splice(arr, -1, 0, 'BB')}`);
+        console.log(`Removed: ${splice(arr, 4, 5, 'CCC')}`);
+        console.log(`Modified array: ${arr}`);
+
 
 
     </script>
