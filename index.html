@@ -34,7 +34,7 @@
 
 
 
-        // 2) Ну еще одна тренировочка  
+        // 2+) Ну еще одна тренировочка  
         //  https://playwithpromise.herokuapp.com/api/order-review - POST запрос на отправление данных
         // `https://playwithpromise.herokuapp.com/api/order-review/removeByEmail?email=${agentName}` - DELETE запрос на удаление этой записи! 
         //  agentName - брать значение со свойства agentName в обьекте order!
@@ -43,9 +43,36 @@
         // Сделать с помощью then и async await!
         // НЕ ЗНАЕТЕ КАК СДЕЛАТЬ POST, DELETE запросы ? ТОЖЕ САМОЕ ЧТО И С GET, только нужно немного пеменять и добавить кое-что !
         //  Ставим вас в боевую обстановку нужно загуглить как, если не получиться тогда я подскажу!
+        // let order = {
+        //     creationDate: "2019-04-07T19:14:55.964Z",
+        //     agentName: "shakhovserge@gmail.com",// здесь введите лучше какой-то другой эмеил!
+        //     orderId: 10
+        // };
+        // const orderList = [
+        //     {
+        //         quantity: 2,
+        //         productId: "5d4750f21c9d440000511775"
+        //     },
+        //     {
+        //         quantity: 2,
+        //         productId: "5d47551f1c9d440000511779"
+        //     }
+        // ];
+        // order = {
+        //     ...order,
+        //     orderList
+        // }
+
+        // // 3) Ну и последнее как всегда! теперь пишем свой splice
+        // function splice(array) {
+        //     // ваш код
+        // }
+
+
+
         let order = {
             creationDate: "2019-04-07T19:14:55.964Z",
-            agentName: "shakhovserge@gmail.com",// здесь введите лучше какой-то другой эмеил!
+            agentName: "lenysiksem7@gmail.com",
             orderId: 10
         };
         const orderList = [
@@ -62,6 +89,59 @@
             ...order,
             orderList
         }
+
+        let post = 'https://playwithpromise.herokuapp.com/api/order-review';
+        let del = `https://playwithpromise.herokuapp.com/api/order-review/removeByEmail?email=${order.agentName}`;
+
+
+        function requestPost(url, data) {
+            return new Promise((res, rej) => {
+                let Req = new XMLHttpRequest();
+                Req.open("POST", url);
+                Req.setRequestHeader("Content-Type", "application/json");
+                Req.send(JSON.stringify(data));
+                Req.onload = function () {
+                    if (this.status != 200) {
+                        rej(`Error ${this.status}: ${this.statusText}`);
+                    }
+                    res(JSON.parse(this.responseText));
+                };
+                Req.onerror = () => rej('Request failed!!!');
+
+            });
+        }
+
+        function removeData(url) {
+            return new Promise((res, rej) => {
+                let Req = new XMLHttpRequest();
+                Req.open("DELETE", url);
+                Req.send();
+                Req.onload = function () {
+                    if (this.status != 200) {
+                        rej('There is some problem in response from server!!!');
+                    }
+                    res(JSON.parse(this.responseText));
+                }
+                Req.onerror = () => rej('Request failed!!!');
+            });
+        }
+
+        requestPost(post, order)
+            .then(resp => {
+                console.log('Post (then): ', resp);
+                return removeData(del);
+            })
+            .then(resp => console.log('Delete(then): ', resp))
+            .catch(e => console.log('Error: ', e));
+
+        async function sendRequests() {
+            let postResponse = await requestPost(post, order);
+            console.log('Post (await): ', postResonse);
+            let delResponse = await removeData(del);
+            console.log('Delete (await): ', delResponse);
+        }
+
+        sendRequests();
 
         
         
